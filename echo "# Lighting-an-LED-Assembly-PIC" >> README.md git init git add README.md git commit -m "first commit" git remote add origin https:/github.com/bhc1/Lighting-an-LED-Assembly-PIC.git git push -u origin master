@@ -1,0 +1,94 @@
+;**********************************************************************
+;   This file is a basic code template for object module code         *
+;   generation on the PIC10F200. This file contains the               *
+;   basic code building blocks to build upon.                         *
+;                                                                     *
+;   Refer to the MPASM User's Guide for additional information on     *
+;   features of the assembler and linker.                             *
+;                                                                     *
+;   Refer to the respective PIC data sheet for additional             *
+;   information on the instruction set.                               *
+;                                                                     *
+;                                                                     *
+;**********************************************************************
+;                                                                     *
+;    Filename:	    xxx.asm                                           *
+;    Date:                                                            *
+;    File Version:                                                    *
+;                                                                     *
+;    Author:                                                          *
+;    Company:                                                         *
+;**********************************************************************    
+;    Architecture: Baseline PIC                                       *   
+;    Processor: 10F200                                                *                 
+;**********************************************************************
+;                                                                     *
+;    Files required: none                                             *
+;                                                                     *
+;                                                                     *
+;**********************************************************************   
+;    Description: Lesson 1, example 1                                 *
+;                                                                     *                           
+;    Turns on LED. LED remains on until power is removed              *
+;                                                                     *
+;**********************************************************************
+;                                                                     *
+;    Notes:                                                           *
+;    Pin assignments:                                                 *                
+;    GP1 = indicator LED                                              *
+;                                                                     *
+;                                                                     *
+;**********************************************************************
+
+	list      p=10F200            ; list directive to define processor
+	#include <p10F200.inc>        ; processor specific variable definitions
+    
+; **** CONFIGURATION
+    
+; ext reset, no code protection, no watchdog 
+    
+	__CONFIG   _MCLRE_ON & _CP_OFF & _WDT_OFF
+
+; '__CONFIG' directive is used to embed configuration word within .asm file.
+; The lables following the directive are located in the respective .inc file. 
+; See respective data sheet for additional information on configuration word.
+
+
+
+; we're only turning on LED and don't need variables at this stage. Can delete
+;***** VARIABLE DEFINITIONS
+TEMP_VAR    UDATA
+temp        RES     1             ;example variable definition
+
+
+
+
+
+
+;***RC CALIBRATION***********************************************************
+RCCAL	CODE   0xFF       ; processor reset vector
+               res 1              ; holds internal RC cal value as movlw k 
+
+; Internal RC calibration value is placed at location 0xFF by Microchip
+; as a movlw k, where the k is a literal value.
+                
+;*****RESET VECTOR*****
+	
+RESET	CODE    0x000          ; effective reset vector
+	movwf   OSCCAL            ; Apply internal RC factory calibration
+
+;*****MAIN PROGRAM*****
+
+start	
+        movlw b'1101'       ; configure GP1 (only) as an output
+        tris GPIO
+        movlw b'0010'       ; Set GP1 high
+        movwf GPIO 
+        
+        goto     $          ; loop forever 
+        
+
+
+
+	END                    
+
